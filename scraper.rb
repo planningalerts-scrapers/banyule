@@ -17,7 +17,7 @@ page.search('table a').each_with_index do |application, index|
 
     record = {
       "council_reference" => detail_page.search('h3:contains("Planning Application Reference:") span').inner_text.strip.to_s,
-      "address" => detail_page.search('h3:contains("Map:") span').inner_text.strip.to_s + "VIC",
+      "address" => detail_page.search('h3:contains("Map:") span').inner_text.gsub("\u00A0", " ").strip.to_s + " VIC",
       "description" => detail_page.search('h3:contains("Description:") span').inner_text.strip.to_s,
       "info_url"    => application.attributes['href'].to_s,
       "communt_url" => comment_url,
