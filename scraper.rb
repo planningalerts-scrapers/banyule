@@ -17,7 +17,7 @@ page.search('.list-item-container a').each_with_index do |application, index|
   puts application.search('p')
   puts application.search('p').inner_text
   puts application.search('p').inner_text.split(/Final da(y|te) of notice: /)
-  notice_date = application.search('p').inner_text.strip.split(/Final da(y|te) of notice: /)[1]
+  notice_date = application.search('p').inner_text.strip.split(/Final da(y|te) of notice: /)[2]
   puts notice_date
   record = {
     "council_reference" => detail_page.search('h3:contains("Planning Application Reference:") span').inner_text.strip.to_s,
