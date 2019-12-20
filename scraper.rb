@@ -10,7 +10,7 @@ page = agent.get(url)
 
 puts page
 
-page.search('table a').each_with_index do |application, index|
+page.search('.list-item-container a').each_with_index do |application, index|
   puts index
   
   unless index == 0
