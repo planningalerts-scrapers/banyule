@@ -10,7 +10,7 @@ page = agent.get(url)
 
 nopage = true
 
-page.search('.listing-results+.list-container .list-item-container a').each_with_index do |application, index|
+page.search('div.listing-results+div.list-container .list-item-container a').each_with_index do |application, index|
   detail_page = agent.get(application.attributes['href'].to_s)
   notice_date = application.search('p').inner_text.strip.split(/Final da(y|te) of notice: /)[2]
   address_and_reference = detail_page.search('h3 .oc-page-title').inner_text.strip
