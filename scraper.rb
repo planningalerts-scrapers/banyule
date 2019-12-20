@@ -39,7 +39,9 @@ loop do
     ScraperWiki.save_sqlite(['council_reference'], record)
   end
   
-  next_button = page.search('.button-next input')
-  break unless next_button
+  next_button = page.search('.button-next input')[0]
+  next_button_disabled = next_button.attributes.member? "disabled"
+  break if next_button_disabled
   pageindex = pageindex + 1
+  puts "Continuing to page #{pageindex}"
 end
