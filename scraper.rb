@@ -3,31 +3,49 @@ require 'mechanize'
 
 agent = Mechanize.new
 
-url = "https://www.banyule.vic.gov.au/Services/Planning/Planning-Applications-on-Public-Notice-Advertising/Planning-Applications-on-Public-Notice-Register/"
+baseurl = "https://www.banyule.vic.gov.au/Planning-building/Review-local-planning-applications/Advertised-planning-applications"
+pageindex=1
 comment_url = "mailto:enquiries@banyule.vic.gov.au"
 
-page = agent.get(url)
+loop do
+  url = baseurl + "?dlv_OC%20CL%20Public%20Works%20and%20Projects=(pageindex=#{pageindex})"
+  page = agent.get(url)
 
-page.search('table a').each_with_index do |application, index|
-  unless index == 0
+  page.search('.listing-results+.list-container .list-item-container a').each do |application|
     detail_page = agent.get(application.attributes['href'].to_s)
+    notice_date = application.search('p').inner_text.strip.split(/Final da(y|te) of notice: /)[2]
+    header = detail_page.search('h1.oc-page-title').inner_text.strip.to_s
+    council_reference = header.split(/(.*) - (.*)/)[2]
+    unless council_reference
+      council_reference = header.split(/(.* )(P[0-9]+\/[0-9]+)/)[2]
+    end
 
-    notice_date = detail_page.search('h3:contains("Period of Notice:") span').inner_text.strip.to_s
-    notice_date = notice_date.split(' to ')
+    unless council_reference
+      puts "Could not extract a council_reference from: #{header}"
+      puts "Skipping to next record"
+      break
+    end
 
+    address = detail_page.search('p:contains("View Map")').inner_text.split("View Map")[0].gsub("\u00A0", " ").strip.to_s + " VIC"
+    
     record = {
-      "council_reference" => detail_page.search('h3:contains("Planning Application Reference:") span').inner_text.strip.to_s,
-      "address" => detail_page.search('h3:contains("Map:") span').inner_text.gsub("\u00A0", " ").strip.to_s + " VIC",
-      "description" => detail_page.search('h3:contains("Description:") span').inner_text.strip.to_s,
+      "council_reference" => council_reference.to_s,
+      "address" => address,
+      "description" => detail_page.search('.project-details-list+p').inner_text.strip.to_s,
       "info_url"    => application.attributes['href'].to_s,
-      "communt_url" => comment_url,
+      "comment_url" => comment_url,
       "date_scraped" => Date.today.to_s,
-      "on_notice_from" => DateTime.parse(notice_date[0]).to_date.to_s,
-      "on_notice_to" => DateTime.parse(notice_date[1]).to_date.to_s
+      "on_notice_to" => DateTime.parse(notice_date).to_date.to_s
     }
 
     puts "Saving record " + record['council_reference'] + " - " + record['address']
-#      puts record
+    #puts record
     ScraperWiki.save_sqlite(['council_reference'], record)
   end
+  
+  next_button = page.search('.button-next input')[0]
+  next_button_disabled = next_button.attributes.member? "disabled"
+  break if next_button_disabled
+  pageindex = pageindex + 1
+  puts "Continuing to page #{pageindex}"
 end
