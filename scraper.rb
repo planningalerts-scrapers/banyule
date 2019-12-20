@@ -3,13 +3,14 @@ require 'mechanize'
 
 agent = Mechanize.new
 
-url = "https://www.banyule.vic.gov.au/Planning-building/Review-local-planning-applications/Advertised-planning-applications"
+baseurl = "https://www.banyule.vic.gov.au/Planning-building/Review-local-planning-applications/Advertised-planning-applications"
 pageindex=1
 comment_url = "mailto:enquiries@banyule.vic.gov.au"
 
-page = agent.get(url)
-
 loop do
+  url = baseurl + "?dlv_OC%20CL%20Public%20Works%20and%20Projects=(pageindex=#{pageindex})"
+  page = agent.get(url)
+
   page.search('.listing-results+.list-container .list-item-container a').each do |application|
     detail_page = agent.get(application.attributes['href'].to_s)
     notice_date = application.search('p').inner_text.strip.split(/Final da(y|te) of notice: /)[2]
@@ -38,14 +39,7 @@ loop do
     ScraperWiki.save_sqlite(['council_reference'], record)
   end
   
-  page.search('.button-next input').each do | link |
-    puts link.attributes
-    puts link.inner_text.strip
-    page = link.click
-    puts page
-  end
-  next_link = page.link_with(:text => 'Next')
-  puts next_link.to_s
-  break unless next_link
-  page = next_link.click
+  next_button = page.search('.button-next input')
+  break unless next_button
+  pageindex = pageindex + 1
 end
