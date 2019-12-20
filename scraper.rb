@@ -38,7 +38,7 @@ loop do
     ScraperWiki.save_sqlite(['council_reference'], record)
   end
   
-  next_link = page.search("a.page-link.next").attributes['href'].to_s.split(/\#page-/)[1]
+  next_link = page.search("a.page-link.next").attributes['href'].to_s.split(/.page-/)[1]
   
   puts next_link
   break unless next_link
