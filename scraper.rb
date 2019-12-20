@@ -17,7 +17,7 @@ page.search('.list-item-container a').each_with_index do |application, index|
   puts application.search('p')
   puts application.search('p').inner_text
   puts application.search('p').inner_text.split(/Final da(y|te) of notice: /)
-  notice_date = application.search('p').inner_text.strip.split(/Final da(y|te) of notice: /)
+  notice_date = application.search('p').inner_text.strip.split(/Final da(y|te) of notice: /)[1]
   puts notice_date
   record = {
     "council_reference" => detail_page.search('h3:contains("Planning Application Reference:") span').inner_text.strip.to_s,
@@ -27,7 +27,7 @@ page.search('.list-item-container a').each_with_index do |application, index|
     "communt_url" => comment_url,
     "date_scraped" => Date.today.to_s,
     #"on_notice_from" => DateTime.parse(notice_date[0]).to_date.to_s,
-    "on_notice_to" => DateTime.parse(notice_date[1]).to_date.to_s
+    "on_notice_to" => DateTime.parse(notice_date).to_date.to_s
   }
 
   puts "Saving record " + record['council_reference'] + " - " + record['address']
