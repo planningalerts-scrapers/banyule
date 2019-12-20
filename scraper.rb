@@ -39,9 +39,7 @@ loop do
     ScraperWiki.save_sqlite(['council_reference'], record)
   end
   
-  next_link = page.search("a.page-link.next")
-  puts next_link
+  next_link = page.search("a.next")[0]
   break unless next_link
-  puts next_link[0]
   page = next_link.click
 end
