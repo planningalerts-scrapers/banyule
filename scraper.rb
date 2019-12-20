@@ -23,7 +23,6 @@ loop do
     end
 
     address = detail_page.search('p:contains("View Map")').inner_text.split("View Map")[0].gsub("\u00A0", " ").strip.to_s + " VIC"
-    puts address
     
     record = {
       "council_reference" => council_reference,
@@ -36,12 +35,13 @@ loop do
     }
 
     puts "Saving record " + record['council_reference'] + " - " + record['address']
-    puts record
+    #puts record
     ScraperWiki.save_sqlite(['council_reference'], record)
   end
   
-  next_link = page.search("a.page-link.next")[0]
-  break unless next_link
+  next_link = page.search("a.page-link.next")
   puts next_link
+  break unless next_link
+  puts next_link[0]
   page = next_link.click
 end
