@@ -11,20 +11,18 @@ page = agent.get(url)
 nopage = true
 
 page.search('.listing-results .list-item-container a').each_with_index do |application, index|
-  puts application
-  puts index
   detail_page = agent.get(application.attributes['href'].to_s)
-  puts application.search('p')
-  puts application.search('p').inner_text
-  puts application.search('p').inner_text.split(/Final da(y|te) of notice: /)
   notice_date = application.search('p').inner_text.strip.split(/Final da(y|te) of notice: /)[2]
-  puts notice_date
+  address_and_reference = detail_page.search('h3 .oc-page-title').inner_text.strip
+  address = address_and_reference.split(/(.*) - (.*)/)[0]
+  council_reference = address_and_reference.split(/(.*) - (.*)/)[1]
+
   record = {
-    "council_reference" => detail_page.search('h3:contains("Planning Application Reference:") span').inner_text.strip.to_s,
-    "address" => detail_page.search('h3:contains("Map:") span').inner_text.gsub("\u00A0", " ").strip.to_s + " VIC",
+    "council_reference" => council_reference,
+    "address" => address + " VIC",
     "description" => detail_page.search('h3:contains("Description:") span').inner_text.strip.to_s,
     "info_url"    => application.attributes['href'].to_s,
-    "communt_url" => comment_url,
+    "comment_url" => comment_url,
     "date_scraped" => Date.today.to_s,
     #"on_notice_from" => DateTime.parse(notice_date[0]).to_date.to_s,
     "on_notice_to" => DateTime.parse(notice_date).to_date.to_s
