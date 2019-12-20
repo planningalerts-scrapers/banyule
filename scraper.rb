@@ -23,7 +23,7 @@ page.search('.listing-results+.list-container .list-item-container a').each_with
   record = {
     "council_reference" => council_reference,
     "address" => address,
-    "description" => detail_page.search('.main-content p:first-of-type').inner_text.strip.to_s,
+    "description" => detail_page.search('.project-details-list+p').inner_text.strip.to_s,
     "info_url"    => application.attributes['href'].to_s,
     "comment_url" => comment_url,
     "date_scraped" => Date.today.to_s,
