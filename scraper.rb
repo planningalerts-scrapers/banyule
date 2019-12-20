@@ -8,7 +8,11 @@ comment_url = "mailto:enquiries@banyule.vic.gov.au"
 
 page = agent.get(url)
 
+puts page
+
 page.search('table a').each_with_index do |application, index|
+  puts index
+  
   unless index == 0
     detail_page = agent.get(application.attributes['href'].to_s)
 
@@ -27,7 +31,7 @@ page.search('table a').each_with_index do |application, index|
     }
 
     puts "Saving record " + record['council_reference'] + " - " + record['address']
-#      puts record
+      puts record
     ScraperWiki.save_sqlite(['council_reference'], record)
   end
 end
