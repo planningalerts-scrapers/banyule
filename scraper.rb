@@ -15,8 +15,7 @@ page.search('.list-item-container a').each_with_index do |application, index|
   puts index
   detail_page = agent.get(application.attributes['href'].to_s)
 
-  notice_date = detail_page.search('h3:contains("Period of Notice:") span').inner_text.strip.to_s
-  notice_date = notice_date.split(' to ')
+  notice_date = application.search('p:contains("Final date of notice:")').inner_text.strip.split('Final date of notice: ')
 
   record = {
     "council_reference" => detail_page.search('h3:contains("Planning Application Reference:") span').inner_text.strip.to_s,
@@ -25,7 +24,7 @@ page.search('.list-item-container a').each_with_index do |application, index|
     "info_url"    => application.attributes['href'].to_s,
     "communt_url" => comment_url,
     "date_scraped" => Date.today.to_s,
-    "on_notice_from" => DateTime.parse(notice_date[0]).to_date.to_s,
+    #"on_notice_from" => DateTime.parse(notice_date[0]).to_date.to_s,
     "on_notice_to" => DateTime.parse(notice_date[1]).to_date.to_s
   }
 
