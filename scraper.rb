@@ -8,9 +8,9 @@ pageindex=1
 comment_url = "mailto:enquiries@banyule.vic.gov.au"
 
 url = baseurl + "?dlv_OC%20CL%20Public%20Works%20and%20Projects=(pageindex=#{pageindex})"
+page = agent.get(url)
+
 loop do
-  page = agent.get(url)
-  
   page.search('.listing-results+.list-container .list-item-container a').each_with_index do |application, index|
     detail_page = agent.get(application.attributes['href'].to_s)
     notice_date = application.search('p').inner_text.strip.split(/Final da(y|te) of notice: /)[2]
@@ -38,9 +38,7 @@ loop do
     ScraperWiki.save_sqlite(['council_reference'], record)
   end
   
-  next_link = page.search("a.page-link.next").attributes['href'].to_s.split(/.page-/)[1]
-  
-  puts next_link
+  next_link = page.search("a.page-link.next")
   break unless next_link
-  url = baseurl + "?dlv_OC%20CL%20Public%20Works%20and%20Projects=(pageindex=#{next_link})"
+  page = next_link.click
 end
