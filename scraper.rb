@@ -10,7 +10,7 @@ page = agent.get(url)
 
 nopage = true
 
-page.search('.list-item-container a').each_with_index do |application, index|
+page.search('.listing-results .list-item-container a').each_with_index do |application, index|
   puts application
   puts index
   detail_page = agent.get(application.attributes['href'].to_s)
