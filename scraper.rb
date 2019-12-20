@@ -17,6 +17,11 @@ loop do
     notice_date = application.search('p').inner_text.strip.split(/Final da(y|te) of notice: /)[2]
     header = detail_page.search('h1.oc-page-title').inner_text.strip.to_s
     council_reference = header.split(/(.*) - (.*)/)[2].to_s
+    unless council_reference do
+      puts "Fallback council_reference finding: #{header}"
+      council_reference = header.split(/(.* )(P[0-9]+\/[0-9]{4})/)[1].to_s
+      puts "Found #{council_reference}"
+    end
     address = detail_page.search('p:contains("View Map")').inner_text.split("View Map")[0].gsub("\u00A0", " ").strip.to_s + " VIC"
   
     record = {
