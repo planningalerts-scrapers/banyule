@@ -17,9 +17,6 @@ page.search('.listing-results+.list-container .list-item-container a').each_with
   council_reference = header.split(/(.*) - (.*)/)[2].to_s
   address = detail_page.search('p:contains("View Map")').inner_text.gsub("\u00A0", " ").strip.to_s + " VIC"
   
-  puts council_reference
-  puts address
-  
   record = {
     "council_reference" => council_reference,
     "address" => address,
@@ -27,11 +24,10 @@ page.search('.listing-results+.list-container .list-item-container a').each_with
     "info_url"    => application.attributes['href'].to_s,
     "comment_url" => comment_url,
     "date_scraped" => Date.today.to_s,
-    #"on_notice_from" => DateTime.parse(notice_date[0]).to_date.to_s,
     "on_notice_to" => DateTime.parse(notice_date).to_date.to_s
   }
 
   puts "Saving record " + record['council_reference'] + " - " + record['address']
-    puts record
+    #puts record
   ScraperWiki.save_sqlite(['council_reference'], record)
 end
