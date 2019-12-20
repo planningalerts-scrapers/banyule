@@ -13,7 +13,7 @@ nopage = true
 page.search('.listing-results+.list-container .list-item-container a').each_with_index do |application, index|
   detail_page = agent.get(application.attributes['href'].to_s)
   notice_date = application.search('p').inner_text.strip.split(/Final da(y|te) of notice: /)[2]
-  address_and_reference = detail_page.search('h3 .oc-page-title').inner_text.strip.to_s
+  address_and_reference = application.search('h3 .oc-page-title').inner_text.strip.to_s
   address = address_and_reference.split(/(.*) - (.*)/)[0].to_s
   council_reference = address_and_reference.split(/(.*) - (.*)/)[1].to_s
 
