@@ -15,8 +15,8 @@ page.search('.listing-results+.list-container .list-item-container a').each_with
   notice_date = application.search('p').inner_text.strip.split(/Final da(y|te) of notice: /)[2]
   header = detail_page.search('h1 .oc-page-title').inner_text.strip.to_s
   council_reference = header.split(/(.*) - (.*)/)[1].to_s
-  puts detail_page.search('p:contains("View Map")').inner_text.split(" View Map")[0]
-  puts detail_page.search('p:contains("View Map")').inner_text.split(" View Map")[0].strip
+  puts detail_page.search('p:contains("View Map")').inner_text.split("View Map")[0]
+  puts detail_page.search('p:contains("View Map")').inner_text.split("View Map")[0].strip
   address = detail_page.search('p:contains("View Map")').inner_text.gsub("\u00A0", " ").strip.to_s + " VIC",
 
   record = {
