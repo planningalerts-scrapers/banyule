@@ -14,9 +14,10 @@ page.search('.listing-results+.list-container .list-item-container a').each_with
   detail_page = agent.get(application.attributes['href'].to_s)
   notice_date = application.search('p').inner_text.strip.split(/Final da(y|te) of notice: /)[2]
   puts detail_page.search('h3')
-  address_and_reference = detail_page.search('h3 .oc-page-title').inner_text.strip.to_s
-  address = address_and_reference.split(/(.*) - (.*)/)[0].to_s
-  council_reference = address_and_reference.split(/(.*) - (.*)/)[1].to_s
+  header = detail_page.search('h3 .oc-page-title').inner_text.strip.to_s
+  council_reference = header.split(/(.*) - (.*)/)[1].to_s
+  puts detail_page.search('o:contains("View Map")')
+  address = detail_page.search('o:contains("View Map")').inner_text.gsub("\u00A0", " ").strip.to_s + " VIC",
 
   record = {
     "council_reference" => council_reference,
