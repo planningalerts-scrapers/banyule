@@ -3,7 +3,7 @@ require 'mechanize'
 
 agent = Mechanize.new
 
-baseurl = "https://www.banyule.vic.gov.au/Planning-building/Review-local-planning-applications/Advertised-planning-applications"
+baseurl = "https://www.banyule.vic.gov.au/Planning-building/Review-local-planning-applications/Planning-applications-on-public-notice"
 pageindex=1
 comment_url = "mailto:enquiries@banyule.vic.gov.au"
 
@@ -14,6 +14,8 @@ loop do
   page.search('.listing-results+.list-container .list-item-container a').each do |application|
     detail_page = agent.get(application.attributes['href'].to_s)
     notice_date = application.search('p').inner_text.strip.split(/Final da(y|te) of notice: /)[2]
+   	notice_date = application.search('p').inner_text.strip.split(/Final da(y|te) of notice : /)[2] if notice_date.nil?
+	  # There was an extra spacebar in one application which caused an error, this is to avoid those moments
     header = detail_page.search('h1.oc-page-title').inner_text.strip.to_s
     council_reference = header.split(/(.*) - (.*)/)[2]
     unless council_reference
