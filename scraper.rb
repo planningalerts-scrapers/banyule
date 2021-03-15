@@ -2,6 +2,8 @@ require 'scraperwiki'
 require 'mechanize'
 
 agent = Mechanize.new
+# It looks like the morph.io server is specifically getting blocked here
+# It's not just that it doesn't like non-Australian web requests
 if ENV["MORPH_AUSTRALIAN_PROXY"]
   # On morph.io set the environment variable MORPH_AUSTRALIAN_PROXY to
   # http://morph:password@au.proxy.oaf.org.au:8888 replacing password with
