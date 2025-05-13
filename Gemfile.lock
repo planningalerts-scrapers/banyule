@@ -43,14 +43,14 @@ GEM
     net-http-persistent (4.0.5)
       connection_pool (~> 2.2)
     nkf (0.2.0)
-    nokogiri (1.18.8)
+    nokogiri (1.15.7)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     public_suffix (6.0.2)
     racc (1.8.1)
     rubyntlm (0.6.5)
       base64
-    sqlite3 (2.6.0)
+    sqlite3 (1.6.9)
       mini_portile2 (~> 2.8.0)
     sqlite_magic (0.0.6)
       sqlite3
@@ -62,7 +62,9 @@ PLATFORMS
 
 DEPENDENCIES
   mechanize
+  nokogiri (~> 1.15.0)
   scraperwiki!
+  sqlite3 (~> 1.6.3)
 
 RUBY VERSION
    ruby 3.2.2p53
