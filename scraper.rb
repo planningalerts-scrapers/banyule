@@ -15,10 +15,15 @@ end
 baseurl = "https://www.banyule.vic.gov.au/Planning-building/Review-local-planning-applications/Planning-applications-on-public-notice"
 pageindex=1
 comment_url = "mailto:enquiries@banyule.vic.gov.au"
-
+references_seen = Set.new
+something_new = true
 loop do
-  url = baseurl + "?dlv_OC%20CL%20Public%20Works%20and%20Projects=(pageindex=#{pageindex})"
+  something_new = false
+  url = baseurl + "?dlv_BCC%20CL%20Public%20Works%20and%20Projects=(pageindex=#{pageindex})"
   page = agent.get(url)
+
+  next_button = page.at('span.button-next input')
+  next_button_disabled = next_button.nil? || next_button.attributes.member?('disabled')
 
   page.search('.listing-results+.list-container .list-item-container a').each do |application|
     detail_page = agent.get(application.attributes['href'].to_s)
@@ -52,11 +57,17 @@ loop do
     puts "Saving record " + record['council_reference'] + " - " + record['address']
     #puts record
     ScraperWiki.save_sqlite(['council_reference'], record)
+    something_new ||= !references_seen.include?(record['council_reference'])
+    references_seen.add record['council_reference']
   end
-  
-  next_button = page.search('.button-next input')[0]
-  next_button_disabled = next_button.attributes.member? "disabled"
-  break if next_button_disabled
+
+  if next_button_disabled
+    puts "Exiting on last page (no Next button)"
+    break
+  elsif !something_new
+    puts "Exiting as there was nothing new on this page (infinite loop?)"
+    break
+  end
   pageindex = pageindex + 1
   puts "Continuing to page #{pageindex}"
 end
