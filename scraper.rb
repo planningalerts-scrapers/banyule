@@ -39,15 +39,15 @@ loop do
       council_reference ||= header.split(%r{(.* )(P[0-9]+/[0-9]+)})[2]
 
       unless council_reference
-        $stderr.puts "WARNING: Could not extract a council_reference from: #{header}"
-        $stderr.puts "  [Skipping to next page]"
+        warn "WARNING: Could not extract a council_reference from: #{header}"
+        warn "  [Skipping to next page]"
         exit_status = 1
         break
       end
       p_view_map_split = detail_page.search('p:contains("View Map")').inner_text.split("View Map")
       unless p_view_map_split&.any?
-        $stderr.puts "WARNING: Unable to extract address from detail page (no map view?)"
-        $stderr.puts "  [Skipping to next record]"
+        warn "WARNING: Unable to extract address from detail page (no map view?)"
+        warn "  [Skipping to next record]"
         exit_status = 3
         next
       end
@@ -63,8 +63,8 @@ loop do
         "on_notice_to" => DateTime.parse(notice_date).to_date.to_s,
       }
     rescue Exception => e
-      $stderr.puts "WARNING: Unable to extract details: #{e}"
-      $stderr.puts "  [Skipping to next record]"
+      warn "WARNING: Unable to extract details: #{e}"
+      warn "  [Skipping to next record]"
       exit_status = 2
       next
     end
@@ -86,5 +86,5 @@ loop do
   pageindex += 1
   puts "", "Continuing to page #{pageindex}"
 end
-puts "Finished #{exit_status == 0 ? "successfully" : "with errors"}"
+puts "Finished #{exit_status == 0 ? 'successfully' : 'with errors'}"
 exit(exit_status)
