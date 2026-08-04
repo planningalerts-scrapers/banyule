@@ -46,7 +46,7 @@ GEM
     net-http-digest_auth (1.4.1)
     net-http-persistent (4.0.8)
       connection_pool (>= 2.2.4, < 4)
-    nokogiri (1.16.8-x86_64-linux)
+    nokogiri (1.19.4-x86_64-linux-gnu)
       racc (~> 1.4)
     parallel (1.27.0)
     parser (3.3.10.0)
@@ -112,7 +112,7 @@ PLATFORMS
 
 DEPENDENCIES
   mechanize (~> 2.8.5)
-  nokogiri (~> 1.16.5)
+  nokogiri (~> 1.19.4)
   rake (~> 12.3)
   rspec (~> 3.0)
   rubocop
